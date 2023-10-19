@@ -53,3 +53,14 @@ flights %>% inner_join(airports, by = c("origin"="faa")) %>%
   arrange(-arr_mean) %>%
   print()
 ```
+
+b\. How many flights did the aircraft model with the fastest average speed take? Produce a tibble with 1 row, and entries for the model, average speed (in MPH) and number of flights.
+
+```{r}
+flights %>% inner_join(planes, by = c("tailnum")) %>% 
+  group_by(model) %>%
+  summarize(avg_speed = mean(speed, na.rm = TRUE),
+            num_flights = n()) %>%
+  arrange(-avg_speed) %>%
+  filter(row_number()==1)
+```

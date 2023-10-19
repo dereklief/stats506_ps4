@@ -1,0 +1,55 @@
+---
+title: "STAT 506, PS 4"
+format: html
+editor: visual
+---
+
+GitHub Repository: <https://github.com/dereklief/stats506_ps4>
+
+## **Problem 1 - Tidyverse**
+
+Use the **tidyverse** for this problem. In particular, use piping and **dplyr** as much as you are able. **Note**: Use of any deprecated functions will result in a point loss.
+
+Install and load the package [**nycflights13**](https://cran.r-project.org/package=nycflights13).
+
+```{r}
+library(nycflights13)
+library(tidyverse)
+library(dplyr)
+airports <- airports
+flights <- flights
+```
+
+a.  Generate a table (which can just be a nicely printed tibble) reporting the mean and median departure delay per airport. Generate a second table (which again can be a nicely printed tibble) reporting the mean and median arrival delay per airport. Exclude any destination with under 10 flights. Do this exclusion through code, not manually.
+
+    Additionally,
+
+    -   Order both tables in descending mean delay.
+
+    -   Both tables should use the airport *names* not the airport *codes*.
+
+    -   Both tables should print all rows.
+
+Let's work on the first table - the one for mean and median departure delay per airport, first:
+
+```{r}
+flights %>% inner_join(airports, by = c("origin"="faa")) %>% 
+  group_by(name) %>% 
+  summarize(delay_mean=mean(dep_delay, na.rm=TRUE),
+            delay_median=median(dep_delay, na.rm = TRUE)) %>%
+  arrange(-delay_mean) %>%
+  print()
+```
+
+Now the second table:
+
+```{r}
+flights %>% inner_join(airports, by = c("origin"="faa")) %>% 
+  group_by(dest) %>% 
+  filter(n() >= 10) %>%
+  group_by(name) %>% 
+  summarize(arr_mean=mean(arr_delay, na.rm=TRUE),
+            arr_median=median(arr_delay, na.rm = TRUE)) %>%
+  arrange(-arr_mean) %>%
+  print()
+```

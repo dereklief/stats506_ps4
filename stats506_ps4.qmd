@@ -64,3 +64,36 @@ flights %>% inner_join(planes, by = c("tailnum")) %>%
   arrange(-avg_speed) %>%
   filter(row_number()==1)
 ```
+
+## **Problem 2 - `get_temp()`**
+
+Use the **tidyverse** for this problem. In particular, use piping and **dplyr** as much as you are able. **Note**: Use of any deprecated functions will result in a point loss.
+
+Load the Chicago NNMAPS data we used in the visualization lectures. Write a function `get_temp()` that allows a user to request the average temperature for a given month. The arguments should be:
+
+-   `month`: Month, either a numeric 1-12 or a string.
+
+-   `year`: A numeric year.
+
+-   `data`: The data set to obtain data from.
+
+-   `celsius`: Logically indicating whther the results should be in celsius. Default `FALSE`.
+
+-   `average_fn`: A function with which to compute the mean. Default is `mean`.
+
+The output should be a numeric vector of length 1. The code inside the function should, as with the rest of this problem, use the **tidyverse**. Be sure to sanitize the input.
+
+Prove your code works by evaluating the following. Your code should produce the result, or a reasonable error message.
+
+```{r}
+get_temp("Apr", 1999, data = nnmaps)
+get_temp("Apr", 1999, data = nnmaps, celsius = TRUE)
+get_temp(10, 1998, data = nnmaps, average_fn = median)
+get_temp(13, 1998, data = nnmaps)
+get_temp(2, 2005, data = nnmaps)
+get_temp("November", 1999, data =nnmaps, celsius = TRUE,
+         average_fn = function(x) {
+           x %>% sort -> x
+           x[2:(length(x) - 1)] %>% mean %>% return
+         })
+```
